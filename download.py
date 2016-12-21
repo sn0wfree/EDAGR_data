@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import urllib2, sys,os,urllib,random,time,datetime
+import urllib2, sys,os,urllib,random,time,datetime,platform
 import loadingsplit
 import multiprocessing as mp
 #-------------------
@@ -49,9 +49,10 @@ def chunk_read(response, chunk_size=8192, report_hook=None):
 
 
 def python_download(url,target_path,symbol="UI-friendly",reporthook=None):
+
     #global speed
     f=time.time()
-    global download_count,total_count
+
     #if symbol =="UI-friendly":
     #    print "Begin download with urllib"
     #else:
@@ -71,13 +72,11 @@ def python_download(url,target_path,symbol="UI-friendly",reporthook=None):
 
     urllib.urlretrieve(url,path_filename,reporthook=reporthook)
     #-----------------
-    download_count+=1
+
     speed=time.time()-f
     if symbol =="UI-friendly":
         #progress_test(download_count,total_count,speed,speed*(total_count-download_count))
-
-
-        sys.stdout.write( "\rDownloading %s completed,Remaining %d(%0.2f%%) " %(url.split("/")[-1],(total_count-download_count),float(download_count)*100/total_count))
+        sys.stdout.write( "\rDownloading %s completed,Speed %0.2f s/zip" %(url.split("/")[-1],speed))
         sys.stdout.flush()
     else:
         pass
@@ -99,7 +98,17 @@ def progress_test(counts,lenfile,speed,w):
     sys.stdout.flush()
 
 def import_data(target_year):
+    global target_path
     dirs=os.path.split(os.path.realpath(__file__))[0]
+    #print   platform.system()
+    if "Windows" in platform.system():
+        target_path=dirs+"\\logfile"+"\\" + target_year+"\\"
+        target_txt_file=target_path+"\\"+target_year+".txt"
+
+    else:
+        target_path=dirs+"/logfile/"+target_year+"/"
+        target_txt_file=target_path+"/"+target_year+".txt"
+
     target_path=dirs+"/logfile/"+target_year+"/"
     target_txt_file=target_path+"/"+target_year+".txt"
 
@@ -107,7 +116,11 @@ def import_data(target_year):
     target_url_a=[ur.split("\n")[0] for ur in target_url ]
     return target_url_a,target_path
 
-def transfer_url_and_download(target_url):
+def transfer_url_and_download(target_url_combine):
+    global download_count,total_count
+    target_url=target_url_combine[0]
+    target_path=target_url_combine[1]
+
     url='https://'+ target_url
     #urlretrieve(response, filename=None, reporthook=chunk_report)
     #chunk_read(response, report_hook=chunk_report)
@@ -116,15 +129,20 @@ def transfer_url_and_download(target_url):
 
 
 if __name__ == '__main__':
+    download_count=0
+    total_count=0
     global target_path
     global download_count,total_count
+
+
 
     #target_year="2010"
     target_year=raw_input("which year data want to download:")
 
-    download_count=0
+
 
     target_urls,target_path=import_data(target_year)
+    #print target_path
     downloaded_files=os.listdir(target_path)
     #print target_url[0],type(target_url[0])
     #print target_url[0].split("/")[-1]
@@ -132,7 +150,7 @@ if __name__ == '__main__':
     for target_url in target_urls:
         filenames=target_url.split("/")[-1]
         if filenames not in downloaded_files:
-            need_downloand_file.append(target_url)
+            need_downloand_file.append((target_url,target_path))
         else:
             pass
     total_count=len(need_downloand_file)

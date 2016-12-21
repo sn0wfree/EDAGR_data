@@ -58,7 +58,6 @@ def readacsv(file):
 
 def read_text_file(file):
     with open (file,'r') as file_file:
-
         file_list=file_file.readlines()
         return file_list
 

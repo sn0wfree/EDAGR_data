@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import urllib2, sys,os,urllib
+import urllib2, sys,os,urllib,random,time
 import loadingsplit
 import multiprocessing as mp
 
@@ -69,7 +69,7 @@ def python_download(url,target_path,symbol="UI-friendly",reporthook=None):
     download_count+=1
     if symbol =="UI-friendly":
 
-        sys.stdout.write( "Downloading %s completed,Have completed %d,Remaining %d(%0.2f%) " %(url.split("/")[-1],(download_count/total_count),(total_count-download_count),(total_count-download_count)*100/total_count))
+        sys.stdout.write( "\rDownloading %s completed,Remaining %d(%0.2f%%) " %(url.split("/")[-1],(total_count-download_count),float(total_count-download_count)/total_count))
         sys.stdout.flush()
     else:
         pass
@@ -88,13 +88,16 @@ def transfer_url_and_download(target_url):
     #urlretrieve(response, filename=None, reporthook=chunk_report)
     #chunk_read(response, report_hook=chunk_report)
     python_download(url,target_path=target_path,symbol="UI-friendly")
+    time.sleep(5*random.random())
 
 
 if __name__ == '__main__':
     global target_path
     global download_count,total_count
 
-    target_year="2010"
+    #target_year="2010"
+    target_year=raw_input("which year data want to download:")
+
     download_count=0
 
     target_urls,target_path=import_data(target_year)
@@ -110,7 +113,7 @@ if __name__ == '__main__':
             pass
     total_count=len(need_downloand_file)
     pool=mp.Pool()
-    pool.map(transfer_url_and_download,need_downloand_file[0:10])
+    pool.map(transfer_url_and_download,need_downloand_file)
 
 
 

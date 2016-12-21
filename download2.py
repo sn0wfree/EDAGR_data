@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import urllib2, sys,os,urllib,random,time,datetime
+import urllib2, sys,os,urllib,random,time,datetime,platform,gc
 import loadingsplit
 import multiprocessing as mp
 
@@ -52,7 +52,7 @@ def chunk_read(response, chunk_size=8192, report_hook=None):
 def python_download(url,target_path,symbol="UI-friendly",reporthook=None):
     #global speed
     f=time.time()
-    global download_count,total_count
+    #global download_count,total_count
     #if symbol =="UI-friendly":
     #    print "Begin download with urllib"
     #else:
@@ -72,14 +72,14 @@ def python_download(url,target_path,symbol="UI-friendly",reporthook=None):
 
     urllib.urlretrieve(url,path_filename,reporthook=reporthook)
     #-----------------
-    download_count+=1
+    #download_count+=1
     speed=time.time()-f
     if symbol =="UI-friendly":
-        progress_test(download_count,total_count,speed,speed*(total_count-download_count))
+        #progress_test(download_count,total_count,speed,speed*(total_count-download_count))
 
 
-        #sys.stdout.write( "\rDownloading %s completed,Remaining %d(%0.2f%%) " %(url.split("/")[-1],(total_count-download_count),float(download_count)*100/total_count))
-        #sys.stdout.flush()
+        sys.stdout.write( "\rDownloading %s completed,Speed: %0.2f s/zip " %(url.split("/")[-1],speed))
+        sys.stdout.flush()
     else:
         pass
 
@@ -99,31 +99,57 @@ def progress_test(counts,lenfile,speed,w):
     #sys.stdout.write("\rPercent: [%s] %d%%,remaining time: %.4f mins"%(hashes + spaces,precent,w))
     sys.stdout.flush()
 
-def import_data(target_year):
+def import_data(target_year,pardir_status=None):
     dirs=os.path.split(os.path.realpath(__file__))[0]
-    target_path=dirs+"/logfile/"+target_year+"/"
-    target_txt_file=target_path+"/"+target_year+".txt"
+    if "Windows" in platform.system():
+        pardir=dirs+"\\logfile\\unzip\\"+target_year+"\\"
+        target_path=dirs+"\\logfile\\"+target_year+"\\"
+        target_txt_file=target_path+"\\"+target_year+".txt"
+
+    elif "Darwin" in platform.system():
+        pardir=dirs+"/logfile/unzip/"+target_year+"/"
+        target_path=dirs+"/logfile/"+target_year+"/"
+        target_txt_file=target_path+"/"+target_year+".txt"
+    else:
+        pardir=dirs+"/logfile/unzip/"+target_year+"/"
+        target_path=dirs+"/logfile/"+target_year+"/"
+        target_txt_file=target_path+"/"+target_year+".txt"
+
 
     target_url=loadingsplit.read_text_file(target_txt_file)
     target_url_a=[ur.split("\n")[0] for ur in target_url ]
-    return target_url_a,target_path
+    if pardir_status==None:
+        return target_url_a,target_path
+    elif pardir_status==1 or pardir_status==True:
+        return target_url_a,target_path,pardir
+    else:
+        return target_url_a,target_path
 
-def transfer_url_and_download(target_url):
+
+
+def transfer_url_and_download(target_url_combine):
+    target_url=target_url_combine[0]
+    target_path=target_url_combine[1]
     url='https://'+ target_url
     #urlretrieve(response, filename=None, reporthook=chunk_report)
     #chunk_read(response, report_hook=chunk_report)
     python_download(url,target_path=target_path,symbol="UI-friendly")
-    time.sleep(5*random.random())
+    time.sleep(2*random.random())
 
+def poolfunction(need_downloand_file):
+    pool=mp.Pool()
+    pool.map(transfer_url_and_download,need_downloand_file)
 
 if __name__ == '__main__':
-    global target_path
-    global download_count,total_count
+    gc.enable()
+    #download_count=0
+    #global target_path
+    #global download_count,total_count
 
     #target_year="2010"
     target_year=raw_input("which year data want to download:")
 
-    download_count=0
+
 
     target_urls,target_path=import_data(target_year)
     downloaded_files=os.listdir(target_path)
@@ -133,12 +159,14 @@ if __name__ == '__main__':
     for target_url in target_urls:
         filenames=target_url.split("/")[-1]
         if filenames not in downloaded_files:
-            need_downloand_file.append(target_url)
+            need_downloand_file.append((target_url,target_path))
         else:
             pass
     total_count=len(need_downloand_file)
-    pool=mp.Pool()
-    pool.map(transfer_url_and_download,need_downloand_file)
+
+    poolfunction(need_downloand_file)
+
+    print "Downloading completed! all files are downloaded"
 
 
 

@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import urllib2, sys,os,urllib,random,time,datetime
+import urllib2, sys,os,urllib,random,time,datetime,platform,gc
 import loadingsplit
 import multiprocessing as mp
 #-------------------
@@ -100,13 +100,21 @@ def progress_test(counts,lenfile,speed,w):
 
 def import_data(target_year):
     dirs=os.path.split(os.path.realpath(__file__))[0]
-    target_path=dirs+"/logfile/"+target_year+"/"
-    target_txt_file=target_path+"/"+target_year+".txt"
+    if "Windows" in platform.system():
+        target_path=dirs+"\\logfile\\"+target_year+"\\"
+        target_txt_file=target_path+"\\"+target_year+".txt"
+
+    elif "Darwin" in platform.system():
+        target_path=dirs+"/logfile/"+target_year+"/"
+        target_txt_file=target_path+"/"+target_year+".txt"
+    else:
+        target_path=dirs+"/logfile/"+target_year+"/"
+        target_txt_file=target_path+"/"+target_year+".txt"
+
 
     target_url=loadingsplit.read_text_file(target_txt_file)
     target_url_a=[ur.split("\n")[0] for ur in target_url ]
     return target_url_a,target_path
-
 def transfer_url_and_download(target_url):
     url='https://'+ target_url
     #urlretrieve(response, filename=None, reporthook=chunk_report)
@@ -116,6 +124,7 @@ def transfer_url_and_download(target_url):
 
 
 if __name__ == '__main__':
+    gc.enable()
     global target_path
     global download_count,total_count
 

@@ -2,8 +2,9 @@
 import urllib2, sys,os,urllib,random,time,datetime
 import loadingsplit
 import multiprocessing as mp
+
 #-------------------
-__version__="1.0"
+__version__="1.2"
 __author__="sn0wfree"
 #-------------------
 
@@ -74,11 +75,11 @@ def python_download(url,target_path,symbol="UI-friendly",reporthook=None):
     download_count+=1
     speed=time.time()-f
     if symbol =="UI-friendly":
-        #progress_test(download_count,total_count,speed,speed*(total_count-download_count))
+        progress_test(download_count,total_count,speed,speed*(total_count-download_count))
 
 
-        sys.stdout.write( "\rDownloading %s completed,Remaining %d(%0.2f%%) " %(url.split("/")[-1],(total_count-download_count),float(download_count)*100/total_count))
-        sys.stdout.flush()
+        #sys.stdout.write( "\rDownloading %s completed,Remaining %d(%0.2f%%) " %(url.split("/")[-1],(total_count-download_count),float(download_count)*100/total_count))
+        #sys.stdout.flush()
     else:
         pass
 

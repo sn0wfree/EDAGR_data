@@ -7,6 +7,8 @@ __author__="sn0wfree"
 #-------------------
 
 import os,platform,zipfile
+import loadingsplit
+import download2 as download
 import multiprocessing as mp
 
 
@@ -64,6 +66,35 @@ def check_zipfile(check_path):
     return error_zipfile
 
 
+def check_and_download(error_zipfile_url_1,d="download"):
+
+    if error_zipfile_url_1 !=[]:
+        downloaded_files=[f for f in os.listdir(check_path) if f.split(".")[-1]=="txt"]
+        if len(downloaded_files) == 1:
+            year = downloaded_files[0].split(".")[0]
+        elif len(downloaded_files) > 1:
+            target =[files.split(".")[0] for files in downloaded_files if int(files.split(".")[0]) > 2002]
+            if len(target)==1:
+                year=target
+            else:
+                raise Expection("Error, Missing txt file!")
+        else:
+            raise Expection("Error, un-recogization path and txt file!")
+        target_txt_file=check_path+"/"+year+".txt"
+        #print target_txt_file
+        all_urls=loadingsplit.read_text_file(target_txt_file)
+        all_urls_t=[uuu.split()[0] for uuu in all_urls]
+
+        all_missing_data_urls=[(u,check_path+"/") for u in all_urls_t if u.split("/")[-1] in error_zipfile_url_1]
+        #print all_missing_data_urls
+        if d=="download":
+            print all_missing_data_urls[1][1]
+
+
+            download.poolfunction(all_missing_data_urls)
+            #aaaaa=1
+    else:
+        print "all good"
 if __name__ =="__main__":
     #detect current path
     sys_info=platform.system()
@@ -88,8 +119,23 @@ if __name__ =="__main__":
 
     check_path=raw_input("please enter the path of zipfiles or folders to check:")
     #check_path=__file__
-    error_zipfile=check_zipfile(check_path)
-    print error_zipfile
+    error_zipfiles=check_zipfile(check_path)
+    error_zipfile_url_1=[error_zipfile.split('/')[-1] for error_zipfile in error_zipfiles]
+    print error_zipfile_url_1
+    check_and_download(error_zipfile_url_1,d="download")
+
+
+
+
+
+
+
+
+
+
+
+    #loading txt
+
 
 
 

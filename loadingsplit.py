@@ -62,6 +62,8 @@ def readacsv(file):
 def read_text_file(file):
     with open (file,'r') as file_file:
         file_list=file_file.readlines()
+        
+
         return file_list
 
 def multi_name_and_assign_data_dev(range_subname):
@@ -104,7 +106,7 @@ class classify_data():
 
 
 if __name__ =="__main__":
-    
+
 
     # Test URL
     #url = "http://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2016/Qtr1/log20160330.zip"

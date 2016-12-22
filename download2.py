@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import urllib2, sys,os,urllib,random,time,datetime,platform,gc
+import urllib2, sys,os,urllib,random,time,datetime,platform,gc,zipfile
 import loadingsplit
 import multiprocessing as mp
 
@@ -69,8 +69,11 @@ def python_download(url,target_path,symbol="UI-friendly",reporthook=None):
     #f = urllib2.urlopen(url)
     #with open("code2.zip", "wb") as code:
     #    code.write(f.read())
-
     urllib.urlretrieve(url,path_filename,reporthook=reporthook)
+    while zipfile.is_zipfile(path_filename):
+        urllib.urlretrieve(url,path_filename,reporthook=reporthook)
+
+
     #-----------------
     #download_count+=1
     speed=time.time()-f
@@ -139,6 +142,7 @@ def transfer_url_and_download(target_url_combine):
 def poolfunction(need_downloand_file):
     pool=mp.Pool()
     pool.map(transfer_url_and_download,need_downloand_file)
+    print "Downloading completed! all files are downloaded,%s"%(need_downloand_file[1][1])
 
 if __name__ == '__main__':
     gc.enable()
@@ -167,7 +171,7 @@ if __name__ == '__main__':
 
     poolfunction(need_downloand_file)
 
-    print "Downloading completed! all files are downloaded"
+
 
 
 

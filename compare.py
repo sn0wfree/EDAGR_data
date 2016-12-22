@@ -60,7 +60,8 @@ def check_Missing_file(target_url_a,target_path):
         else:
             break
     return downloaded_files
-
+def unzip_file_for_pool(target_code):
+    unzip_file(target_code[0],target_code[1])
 if __name__ =="__main__":
     check_url="https://www.sec.gov/files/edgar_logfile_list.html"
     gc.enable()
@@ -77,5 +78,7 @@ if __name__ =="__main__":
 
     target_code=[(tempss, unzip_pardir) for tempss in downloaded_files_full_path]
     pool=mp.Pool()
-    pool.map(unzip_file,target_code)
-    print "%s zip file(s) unzip completed"%target_year
+
+
+    pool.map(unzip_file_for_pool,target_code)
+    print "%s year zip logfile(s) unzip completed"%target_year

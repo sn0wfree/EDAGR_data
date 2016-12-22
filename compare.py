@@ -45,8 +45,9 @@ def unzip_file(zipfilename, unziptodir):
 
 
 
-def check_Missing_file(target_url_a,target_path):
+def check_Missing_file(target_url_a,target_path,download=False):
     target_url_file_and_url={}
+    downlaod_symbol=download
     for ff in target_url_a:
         target_url_file_and_url[ff.split("/")[-1]]=ff
     while 1:
@@ -55,13 +56,35 @@ def check_Missing_file(target_url_a,target_path):
         if set(target_url_file_and_url.keys()) != set(downloaded_files):
             undownload_file=set(target_url_file_and_url.keys())-set(downloaded_files)
             undownload_files=[ (target_url_file_and_url[ffs],target_path) for ffs in undownload_file]
-            print "\n !!! Found %d missing file(s), Begin downloading missing file(s). \n Please have coffe and wait!!!\n"%len(undownload_files)
-            download.poolfunction(undownload_files)
+            print "\n !!! Found %d missing file(s)"
+            if download == False:
+                download_input=raw_input("Need I auto-download the missing file(s)?[yes or no]")
+                if download_input == "no":
+                    pass
+                else:
+                    downlaod_symbol=True
+            elif download==True:
+                if  downlaod_symbol !=True:
+                    downlaod_symbol=True
+                else:
+                    pass
+            else:
+                print "Do default setting!\n"
+
+            if downlaod_symbol == True:
+                print "Begin downloading missing file(s). \n Please have coffe and wait!!!\n"%len(undownload_files)
+                download.poolfunction(undownload_files)
+                print "Downloading completed! all files are downloaded"
+            else:
+                pass
         else:
             break
     return downloaded_files
+
 def unzip_file_for_pool(target_code):
     unzip_file(target_code[0],target_code[1])
+
+    
 if __name__ =="__main__":
     check_url="https://www.sec.gov/files/edgar_logfile_list.html"
     gc.enable()

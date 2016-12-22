@@ -4,7 +4,7 @@ import loadingsplit
 import multiprocessing as mp
 
 #-------------------
-__version__="1.2"
+__version__="2"
 __author__="sn0wfree"
 #-------------------
 
@@ -152,6 +152,7 @@ if __name__ == '__main__':
 
 
     target_urls,target_path=import_data(target_year)
+    #obtain downloaded files
     downloaded_files=os.listdir(target_path)
     #print target_url[0],type(target_url[0])
     #print target_url[0].split("/")[-1]

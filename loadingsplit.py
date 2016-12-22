@@ -1,6 +1,9 @@
 # -*- coding:utf-8 -*-
 
-
+#-------------------
+__version__="1.0"
+__author__="sn0wfree"
+#-------------------
 
 #from selenium import webdriver
 import urllib,os
@@ -101,9 +104,7 @@ class classify_data():
 
 
 if __name__ =="__main__":
-    chrome = 'Mozilla/5.0 (X11; Linux i86_64) AppleWebKit/537.36 ' + '(KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36'
-    headers = {'User-Agent': chrome}
-
+    
 
     # Test URL
     #url = "http://www.sec.gov/dera/data/Public-EDGAR-log-file-data/2016/Qtr1/log20160330.zip"
@@ -116,26 +117,12 @@ if __name__ =="__main__":
 
 
     #end initial date
-
-
-
-
-
     error_url=[]
-
-
-
     years=[str(i) for i in xrange(2002,2016+1)]
-
-
     Qtrs=["Qtr1","Qtr2","Qtr3","Qtr4"]
     category=(years,Qtrs)
     #create container
     all_url=multi_name_and_assign_data_dev(years)
-
-
-
-
     for orignal_url in lis:
         if orignal_url in headd:
             # ingore "URL Structure to access files (by Qtrs)"
@@ -149,22 +136,16 @@ if __name__ =="__main__":
                 #print addr_clean
                 if addr_clean[0] in years:
                     #when years 2016
-
                     year=addr_clean[0]
-
                     if addr_clean[1] in Qtrs:
                         Qtr=addr_clean[1]
                         if ".zip" in addr_clean[2]:
                             md=addr_clean[2].split(".zip")[0].split(year)[1]
                             if len(md) == 4:
                                 (month,day)=(md[0:2],md[2:4])
-
-
                                 temp.name_it(year,Qtr,month,day,orignal_url)
-
                                 #print temp.year
                                 #print temp.Qtr
-
                                 all_url[temp.year].append(temp)
                             else:
                                 error_url.append(orignal_url)

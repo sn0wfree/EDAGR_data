@@ -24,6 +24,7 @@ def check_zipfile_for_pool(zip_file_path_lists):
     return a
 
 def check_zipfile(check_path):
+    sys_info=platform.system()
     error_zipfile=[]
     if os.path.isfile(check_path):
         file_name=os.path.split(os.path.realpath(check_path))[1]
@@ -66,6 +67,7 @@ def check_zipfile(check_path):
 if __name__ =="__main__":
     #detect current path
     sys_info=platform.system()
+
     #-----------
     dirs=os.path.split(os.path.realpath(__file__))[0]
     if "logfile" in os.listdir(dirs):

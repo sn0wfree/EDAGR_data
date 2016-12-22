@@ -84,17 +84,13 @@ def check_Missing_file(target_url_a,target_path,download=False):
 def unzip_file_for_pool(target_code):
     unzip_file(target_code[0],target_code[1])
 
-    
-if __name__ =="__main__":
-    check_url="https://www.sec.gov/files/edgar_logfile_list.html"
-    gc.enable()
-    target_year=raw_input("which year data want to compare or unzip:")
+def compare_and_unzip(target_year,download=False):
+
     #compare
     target_url_a,target_path,unzip_pardir=download.import_data(target_year,pardir_status=1)
 
-    downloaded_files=check_Missing_file(target_url_a,target_path)
+    downloaded_files=check_Missing_file(target_url_a,target_path,download=False)
     #print target_path
-
 
     #return full path
     downloaded_files_full_path=[target_path + temp for temp in downloaded_files]
@@ -102,6 +98,11 @@ if __name__ =="__main__":
     target_code=[(tempss, unzip_pardir) for tempss in downloaded_files_full_path]
     pool=mp.Pool()
 
-
     pool.map(unzip_file_for_pool,target_code)
     print "%s year zip logfile(s) unzip completed"%target_year
+
+if __name__ =="__main__":
+    gc.enable()
+    check_url="https://www.sec.gov/files/edgar_logfile_list.html"
+    target_year=raw_input("which year data want to compare or unzip:")
+    compare_and_unzip(target_year)

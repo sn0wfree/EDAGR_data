@@ -14,8 +14,8 @@ def check_zipfile_for_pool(zip_file_path_lists):
 
 
 
-    if  zipfile.ZipFile(zip_file_path_lists).testzip() != None:
-        a=zipfile.ZipFile(zip_file_path_lists).testzip()
+    if  zipfile.is_zipfile(zip_file_path_lists)!= True:
+        a=zip_file_path_lists
 
     else:
         a=0
@@ -30,8 +30,8 @@ def check_zipfile(check_path):
         file_name=os.path.split(os.path.realpath(check_path))[1]
         if file_name.split(".")[-1] == "zip":
             #check zip
-            if zipfile.ZipFile(check_path).testzip() != None:
-                error_zipfile.append(zipfile.ZipFile(check_path).testzip())
+            if zipfile.is_zipfile(check_path) != True:
+                error_zipfile.append(check_path)
             else:
                 print "All Good!"
         else:

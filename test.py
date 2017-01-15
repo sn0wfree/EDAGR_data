@@ -2,10 +2,10 @@
 
 
 #-------------------
-__version__="1.0"
-__author__="sn0wfree"
+__version__ = "1.0"
+__author__ = "sn0wfree"
 #-------------------
 
 
-if __name__ =="__main__":
+if __name__ == "__main__":
     pass

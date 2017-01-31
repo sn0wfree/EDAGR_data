@@ -5,7 +5,7 @@
 __version__ = "1.0"
 __author__ = "sn0wfree"
 #-------------------
-
+import os
 
 if __name__ == "__main__":
-    pass
+    print os.path.split(os.path.realpath(__file__))

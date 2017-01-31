@@ -2,6 +2,7 @@
 
 
 import os
+import platform
 import os.path
 import zipfile
 
@@ -80,16 +81,20 @@ def input_unzip_funtion():
 
 
 def generate_unzip_path(years, path):
+    if "Windows" in platform.system():
+        symb = "\\"
+    elif "Darwin" in platform.system():
+        symb = '/'
 
     if isinstance(years, int):
         print 'this program will uncompress the %d-year file to %s/unzip' % (years, path)
-        path_target = path + "/" + str(years)
-        path_unzip = path + "/unzip" + "/" + str(years)
+        path_target = path + symb + str(years)
+        path_unzip = path + symb + "unzip" + symb + str(years)
 
     elif isinstance(years, list):
         print 'this program will uncompress the %s-%syear file to %s/unzip' % (str(years[0]), str(years[-1]), path)
-        path_target = [path + "/" + str(i) for i in years]
-        path_unzip = [path + "/unzip" + "/" + str(i) for i in years]
+        path_target = [path + symb + str(i) for i in years]
+        path_unzip = [path + symb + "unzip" + symb + str(i) for i in years]
 
     else:
         print 'cannot recoginse the path or years'

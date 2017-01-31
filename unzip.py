@@ -88,13 +88,14 @@ def generate_unzip_path(years, path):
 
     if isinstance(years, int):
         print 'this program will uncompress the %d-year file to %s/unzip' % (years, path)
-        path_target = path + symb + str(years)
-        path_unzip = path + symb + "unzip" + symb + str(years)
+        path_target = path + symb + str(years) + symb
+        path_unzip = path + symb + "unzip" + symb + str(years) + symb
 
     elif isinstance(years, list):
         print 'this program will uncompress the %s-%syear file to %s/unzip' % (str(years[0]), str(years[-1]), path)
-        path_target = [path + symb + str(i) for i in years]
-        path_unzip = [path + symb + "unzip" + symb + str(i) for i in years]
+        path_target = [path + symb + str(i) + symb for i in years]
+        path_unzip = [path + symb + "unzip" +
+                      symb + str(i) + symb for i in years]
 
     else:
         print 'cannot recoginse the path or years'
@@ -122,6 +123,11 @@ if __name__ == "__main__":
 
     # print pp
     for p in pp:
-        unzip_file(p[1], p[2])
+        if os.path.isdir(p[1]):
+            file_list = os.listdir(p[1])
+            zip_file_list = [
+                zipfff for zipfff in file_list if zipfff.split(".")[-1] == "zip"]
+        for z in zipfff:
+            unzip_file(p[1] + z, p[2])
 
         # unzip_file(zipfilename, unziptodir)

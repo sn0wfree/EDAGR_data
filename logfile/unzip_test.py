@@ -49,6 +49,28 @@ def unzip_file(zipfilename, unziptodir):
                 os.mkdir(ext_dir, 0777)
             outfile = open(ext_filename, 'wb')
             outfile.write(zfobj.read(name))
+
+            outfile.close()
+
+
+def unzip_file_extractall(zipfilename, unziptodir):
+    if not os.path.exists(unziptodir):
+        os.mkdir(unziptodir, 0777)
+    zfobj = zipfile.ZipFile(zipfilename)
+    for name in zfobj.namelist():
+        name = name.replace('\\', '/')
+
+        if name.endswith('/'):
+            os.mkdir(os.path.join(unziptodir, name))
+        else:
+            ext_filename = os.path.join(unziptodir, name)
+            ext_dir = os.path.dirname(ext_filename)
+            if not os.path.exists(ext_dir):
+                os.mkdir(ext_dir, 0777)
+            #outfile = open(ext_filename, 'wb')
+            # outfile.write(zfobj.read(name))
+            print ext_dir
+
             outfile.close()
 
 
@@ -67,8 +89,6 @@ def generate_path(father_path, symb):
 
     target_year = set(os.listdir(father_path)) & set(years)
 
-    # target_year = [x for x in os.listdir(father_path) if x in years]
-    #
     years_target = raw_input(
         'please enter the year which you want to unzip,combined with comma:')
     if years_target == 'all':
@@ -111,6 +131,25 @@ def generate_path(father_path, symb):
     return logfile_path, logfile_dir_path, target_unzip_path
 
 
+def unzip_file_extract(zipfilename, unziptodir):
+    if not os.path.exists(unziptodir):
+        os.mkdir(unziptodir, 0777)
+    zfobj = zipfile.ZipFile(zipfilename)
+    for name in zfobj.namelist():
+        name = name.replace('\\', '/')
+
+        if name.endswith('/'):
+            os.mkdir(os.path.join(unziptodir, name))
+        else:
+            ext_filename = os.path.join(unziptodir, name)
+            ext_dir = os.path.dirname(ext_filename)
+            if not os.path.exists(ext_dir):
+                os.mkdir(ext_dir, 0777)
+            #outfile = open(ext_filename, 'wb')
+            # outfile.write(zfobj.read(name))
+            zfobj.extract(name, path=ext_dir)
+
+
 if __name__ == '__main__':
     father_path = os.path.split(os.path.realpath(__file__))[0]
     symb = detect_operation_system_symb()
@@ -118,7 +157,7 @@ if __name__ == '__main__':
         father_path, symb)
     # print 'logfile path is %s' % logfile_path
     # print 'child path includes %s' % child_path
-    print target_unzip_path
+    # print target_unzip_path
     pool = mp.Pool()
     if target_unzip_path[-1] != symb:
         target_unzip_path += symb
@@ -129,6 +168,9 @@ if __name__ == '__main__':
         dest_target = target_unzip_path + pa
         if not os.path.exists(dest_target):
             os.mkdir(dest_target)
+        else:
+            pass
+
         yyy = [(fi, dest_target) for fi in logfile_path[pa]]
         if yyy != []:
             pool.map(unzip_file_for_map, yyy)

@@ -7,6 +7,7 @@ import datetime
 import platform
 import os.path
 import zipfile
+import gc
 import multiprocessing as mp
 
 
@@ -131,6 +132,7 @@ if __name__ == '__main__':
         yyy = [(fi, dest_target) for fi in logfile_path[pa]]
         if yyy != []:
             pool.map(unzip_file_for_map, yyy)
+            gc.collect()
 
         # mutli_unzip
 

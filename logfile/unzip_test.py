@@ -157,8 +157,8 @@ if __name__ == '__main__':
         father_path, symb)
     # print 'logfile path is %s' % logfile_path
     # print 'child path includes %s' % child_path
-    # print target_unzip_path
-    pool = mp.Pool()
+    print target_unzip_path
+    #pool = mp.Pool()
     if target_unzip_path[-1] != symb:
         target_unzip_path += symb
     if not os.path.exists(target_unzip_path):
@@ -173,8 +173,16 @@ if __name__ == '__main__':
 
         yyy = [(fi, dest_target) for fi in logfile_path[pa]]
         if yyy != []:
-            pool.map(unzip_file_for_map, yyy)
-            gc.collect()
+            ready_file = [r.split('.')[0] for r in os.listdir(
+                dest_target) if r.split('.')[-1] == 'csv']
+            for y in yyy:
+                name = y[0].split(symb)[-1].split('.zip')[0]
+                if name in ready_file:
+                    pass
+                else:
+                    unzip_file_for_map(y)
+                gc.collect()
+            #pool.map(unzip_file_for_map, yyy)
 
         # mutli_unzip
 

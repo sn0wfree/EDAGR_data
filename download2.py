@@ -80,7 +80,7 @@ def python_download(url, target_path, symbol="UI-friendly", reporthook=None):
     # with open("code2.zip", "wb") as code:
     #    code.write(f.read())
     urllib.urlretrieve(url, path_filename, reporthook=reporthook)
-    while zipfile.is_zipfile(path_filename):
+    while not zipfile.is_zipfile(path_filename):
         urllib.urlretrieve(url, path_filename, reporthook=reporthook)
 
     #-----------------
@@ -118,16 +118,16 @@ def import_data(target_year, pardir_status=None):
     if "Windows" in platform.system():
         pardir = dirs + "\\logfile\\unzip\\" + target_year + "\\"
         target_path = dirs + "\\logfile\\" + target_year + "\\"
-        target_txt_file = target_path + "\\" + target_year + ".txt"
+        target_txt_file = target_path + target_year + ".txt"
 
     elif "Darwin" in platform.system():
         pardir = dirs + "/logfile/unzip/" + target_year + "/"
         target_path = dirs + "/logfile/" + target_year + "/"
-        target_txt_file = target_path + "/" + target_year + ".txt"
+        target_txt_file = target_path + target_year + ".txt"
     else:
         pardir = dirs + "/logfile/unzip/" + target_year + "/"
         target_path = dirs + "/logfile/" + target_year + "/"
-        target_txt_file = target_path + "/" + target_year + ".txt"
+        target_txt_file = target_path + target_year + ".txt"
 
     target_url = loadingsplit.read_text_file(target_txt_file)
     target_url_a = [ur.split("\n")[0] for ur in target_url]
@@ -151,6 +151,7 @@ def transfer_url_and_download(target_url_combine):
 
 def poolfunction(need_downloand_file):
     pool = mp.Pool()
+    # print need_downloand_file
     pool.map(transfer_url_and_download, need_downloand_file)
     print "Downloading completed! all files are downloaded,%s" % (need_downloand_file[1][1])
 
@@ -175,7 +176,7 @@ if __name__ == '__main__':
             need_downloand_file.append((target_url, target_path))
         else:
             pass
-    total_count = len(need_downloand_file)
+    #total_count = len(need_downloand_file)
 
     poolfunction(need_downloand_file)
 

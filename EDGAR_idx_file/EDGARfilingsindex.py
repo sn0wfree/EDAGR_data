@@ -195,7 +195,7 @@ if __name__ == '__main__':
         create_databased_sqlite('edgar_idx.db', url,
                                 field_name).create_database_file()
 
-        print tuple(field_name)
+        print '%s %s idx download completed' % (url[1][0], url[1][1])
 
         # field_name = ['CIK', 'Company Name', 'Form Type', 'Date Filed',
         # 'Filename']

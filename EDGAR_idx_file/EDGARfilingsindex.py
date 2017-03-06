@@ -39,6 +39,22 @@ class Qtr(Enum):
         else:
             print "un-recogizated Quarter"
 
+    def translate_quarter(self, date):
+        if date is tuple or date is list:
+            if len(date) >= 2:
+                test_quarter = date[1]
+                quarter = (test_quarter - 1) / 3 + 1
+                return quarter
+            else:
+
+                raise "un-recogizated Quarter"
+        else:
+            print '''No-tuple or No-list type detected,
+                    please use list or tuple type pf date,
+                    like (2017,1,1) or [2017,1,1]
+                    '''
+            raise "un-included type detected"
+
 
 class rNN_process_delete_invald_space():
     # initial valid characher scaner
@@ -131,6 +147,7 @@ def read_idx_file(url):
     field_name.extend([unicode('Url'), unicode('Accession')])
 
     content = allrecords[11:]
+    main_domin = 'https://www.sec.gov/Archives/'
     for a in content:
         a.extend([unicode(main_domin + a[-1]),
                   unicode(a[4].split("/")[-1].split(".")[0])])
@@ -140,7 +157,7 @@ def read_idx_file(url):
     return (title_dict, field_name, content)
 
 
-class create_databased_sqlite():
+class create_database_sqlite():
 
     def __init__(self, database_sqlite_name, url, field_name):
         self.sqlite_name = database_sqlite_name
@@ -192,8 +209,8 @@ if __name__ == '__main__':
         # TEXT)' % (tuple(field_name))
         # print content[1], len(content[1])
 
-        create_databased_sqlite('edgar_idx.db', url,
-                                field_name).create_database_file()
+        create_database_sqlite('edgar_idx.db', url,
+                               field_name).create_database_file()
 
         print '%s %s idx download completed' % (url[1][0], url[1][1])
 

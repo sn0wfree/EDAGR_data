@@ -182,6 +182,7 @@ class create_database_sqlite():
 
 
 if __name__ == '__main__':
+    gc.enable
 
     # requests_cache initial
     requests_cache.install_cache(
@@ -199,18 +200,12 @@ if __name__ == '__main__':
 
     for url in urls:
         # https://www.sec.gov/Archives/edgar/data/60512/0000060512-94-000005.txt
-        #url = urls[87]
-        # if 1:
+
         (title_dict, field_name, content) = read_idx_file(url)
-
-        # print 'DROP TABLE IF EXISTS %s' % (str(url[1][0]) + url[1][1])
-
-        # print '%s(%s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s
-        # TEXT)' % (tuple(field_name))
-        # print content[1], len(content[1])
 
         create_database_sqlite('edgar_idx.db', url,
                                field_name).create_database_file()
+        gc.collect
 
         print '%s %s idx download completed' % (url[1][0], url[1][1])
 

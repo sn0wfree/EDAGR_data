@@ -3,6 +3,9 @@
 #-------------------
 __version__ = "0.8"
 __author__ = "sn0wfree"
+'''
+this py file can download the index file for each company's filings
+'''
 #-------------------
 import os
 import datetime
@@ -26,7 +29,7 @@ class Qtr(Enum):
         # Describe the member with name and value
         return self.name, self.value
 
-    def quarter_view_str(self):
+    def QuarterViewStr(self):
         #
         if self.value == 1:
             print ("this is the %sst quarter") % self.value
@@ -39,7 +42,7 @@ class Qtr(Enum):
         else:
             print "un-recogizated Quarter"
 
-    def translate_quarter(self, date):
+    def TranslateQuarter(self, date):
         if isinstance(date, tuple) or isinstance(date, list):
             if len(date) >= 2:
                 test_quarter = date[1]
@@ -65,7 +68,7 @@ class rNN_process_delete_invald_space():
         # self.temp_string = {}
         self.output_string = {}
 
-    def translate_into_method(self, string):
+    def TranslateIntoMethod(self, string):
         string_trans = ''
         for i in xrange(len(string)):
             if string[i] == " ":
@@ -78,7 +81,7 @@ class rNN_process_delete_invald_space():
 
         target_keys = self.import_string.keys()
         for target_key in target_keys:
-            temp_string = self.translate_into_method(
+            temp_string = self.TranslateIntoMethod(
                 self.import_string[target_key])
             temp_signal = ['0'] * len(temp_string)
             if temp_string[0] == '1':

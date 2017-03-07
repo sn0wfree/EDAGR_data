@@ -40,7 +40,7 @@ class Qtr(Enum):
             print "un-recogizated Quarter"
 
     def translate_quarter(self, date):
-        if date is tuple or date is list:
+        if isinstance(date, tuple) or isinstance(date, list):
             if len(date) >= 2:
                 test_quarter = date[1]
                 quarter = (test_quarter - 1) / 3 + 1

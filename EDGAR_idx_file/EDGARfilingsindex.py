@@ -26,7 +26,7 @@ class Qtr(Enum):
         # Describe the member with name and value
         return self.name, self.value
 
-    def quarter_view_str(self):
+    def QuarterViewStr(self):
         #
         if self.value == 1:
             print ("this is the %sst quarter") % self.value
@@ -39,7 +39,7 @@ class Qtr(Enum):
         else:
             print "un-recogizated Quarter"
 
-    def translate_quarter(self, date):
+    def TranslateQuarter(self, date):
         if isinstance(date, tuple) or isinstance(date, list):
             if len(date) >= 2:
                 test_quarter = date[1]
